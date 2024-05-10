@@ -40,8 +40,8 @@ public class ViewHelper {
         });
     }
 
-    public static boolean changeLookDirection(PlayerEntity player, Vec3d targetPos) {
-        if (player == null) return false;
+    public static void changeLookDirection(PlayerEntity player, Vec3d targetPos) {
+        if (player == null) return;
 
         player.getWorld().addParticle(ParticleTypes.SMOKE, targetPos.x, targetPos.y, targetPos.z, 0, 0, 0);
 
@@ -56,7 +56,6 @@ public class ViewHelper {
 
         player.setYaw(newYaw % 360.0F);
         player.setPitch(newPitch);
-        return true;
     }
 
     private static Entity findAnimal(PlayerEntity player, boolean random) {
