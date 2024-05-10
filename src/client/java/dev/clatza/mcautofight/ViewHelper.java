@@ -21,21 +21,21 @@ public class ViewHelper {
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             if (!GlobalData.isAttacking) return;
 
-            if (GlobalData.currentTargetEntety == null){
-                GlobalData.currentTargetEntety = findAnimal(MinecraftClient.getInstance().player, false);
+            if (GlobalData.currentTargetEntity == null){
+                GlobalData.currentTargetEntity = findAnimal(MinecraftClient.getInstance().player, false);
 
-                if(GlobalData.currentTargetEntety != null) System.out.println("New target Enemy: " + GlobalData.currentTargetEntety.getEntityName());
+                if(GlobalData.currentTargetEntity != null) System.out.println("New target Enemy: " + GlobalData.currentTargetEntity.getEntityName());
             }
 
-            if (GlobalData.currentTargetEntety == null) return;
-            if (!GlobalData.currentTargetEntety.isLiving()) {GlobalData.currentTargetEntety = null; return; }
-            if (GlobalData.currentTargetEntety.isRemoved()) {GlobalData.currentTargetEntety = null; return; }
+            if (GlobalData.currentTargetEntity == null) return;
+            if (!GlobalData.currentTargetEntity.isLiving()) {GlobalData.currentTargetEntity = null; return; }
+            if (GlobalData.currentTargetEntity.isRemoved()) {GlobalData.currentTargetEntity = null; return; }
 
-            changeLookDirection(MinecraftClient.getInstance().player, GlobalData.currentTargetEntety.getPos());
+            changeLookDirection(MinecraftClient.getInstance().player, GlobalData.currentTargetEntity.getPos());
 
             if(GlobalData.lastEnemyFoundAt + 10000 < System.currentTimeMillis()){
-                GlobalData.entityIgnoreList.add(GlobalData.currentTargetEntety.getId());
-                GlobalData.currentTargetEntety = findAnimal(MinecraftClient.getInstance().player, true);
+                GlobalData.entityIgnoreList.add(GlobalData.currentTargetEntity.getId());
+                GlobalData.currentTargetEntity = findAnimal(MinecraftClient.getInstance().player, true);
             }
         });
     }

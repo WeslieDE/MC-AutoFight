@@ -32,10 +32,10 @@ public class MovementHelper {
             HitResult hit = client.crosshairTarget;
 
             if (hit != null && hit.getType() == HitResult.Type.ENTITY) {
-                GlobalData.currentTargetEntety = ((EntityHitResult) hit).getEntity();
-                if (!GlobalData.currentTargetEntety.isLiving()) return;
-                if (GlobalData.currentTargetEntety instanceof AnimalEntity || GlobalData.currentTargetEntety instanceof Monster) attackEntity(GlobalData.currentTargetEntety);
-                GlobalData.currentTargetEntety = null;
+                GlobalData.currentTargetEntity = ((EntityHitResult) hit).getEntity();
+                if (!GlobalData.currentTargetEntity.isLiving()) return;
+                if (GlobalData.currentTargetEntity instanceof AnimalEntity || GlobalData.currentTargetEntity instanceof Monster) attackEntity(GlobalData.currentTargetEntity);
+                GlobalData.currentTargetEntity = null;
             }
         });
 
@@ -43,7 +43,7 @@ public class MovementHelper {
             PlayerEntity player = MinecraftClient.getInstance().player;
 
             if (!GlobalData.isAttacking) return;
-            if (GlobalData.currentTargetEntety == null) return;
+            if (GlobalData.currentTargetEntity == null) return;
             if (player == null) return;
 
             //if(GlobalData.currentTargetEntety == null){
@@ -53,7 +53,7 @@ public class MovementHelper {
             //return;
             //}
 
-            double distance = player.distanceTo(GlobalData.currentTargetEntety);
+            double distance = player.distanceTo(GlobalData.currentTargetEntity);
 
             if (distance > 1.0) {
                 KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;

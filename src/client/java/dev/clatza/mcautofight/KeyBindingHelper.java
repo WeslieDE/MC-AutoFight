@@ -31,7 +31,7 @@ public class KeyBindingHelper {
         GlobalData.isAttacking = !GlobalData.isAttacking;
 
         GlobalData.entityIgnoreList = new TimedRemovalList();
-        GlobalData.currentTargetEntety = null;
+        GlobalData.currentTargetEntity = null;
         TeleportMonitor.detectPortals(MinecraftClient.getInstance().player.getWorld(), MinecraftClient.getInstance().player.getPos());
 
         KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
