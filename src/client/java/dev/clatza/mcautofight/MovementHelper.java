@@ -58,11 +58,14 @@ public class MovementHelper {
             if (distance > 1.0) {
                 KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
                 KeyBindingHelper.setKeyBindingPressed(forwardKey, true);
+
+                if (distance > 5.0)KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, true);
                 //System.out.println("Start moving forward; distance: " + distance);
                 return;
             }else{
                 KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
                 KeyBindingHelper.setKeyBindingPressed(forwardKey, false);
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, false);
                 //System.out.println("Stop moving forward: distance: " + distance);
                 return;
             }

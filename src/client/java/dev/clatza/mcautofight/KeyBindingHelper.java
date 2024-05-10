@@ -47,4 +47,9 @@ public class KeyBindingHelper {
     public static void setKeyBindingPressed(KeyBinding keyBinding, boolean pressed) {
         keyBinding.setPressed(pressed);
     }
+
+    public static void oneTimePress(KeyBinding keyBinding) {
+        setKeyBindingPressed(keyBinding, true);
+        setKeyBindingPressed(keyBinding, false);
+    }
 }
