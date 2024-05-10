@@ -4,8 +4,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +17,7 @@ public class TeleportMonitor {
 
     private static final int SEARCH_RADIUS = 50;
     private static final int BUFFER_ZONE = 15;
-    private static List<Box> portalSafeZones = new ArrayList<>();
+    private static final List<Box> portalSafeZones = new ArrayList<>();
 
     private static boolean lastState = false;
 
@@ -44,11 +42,7 @@ public class TeleportMonitor {
             lastPosition = MinecraftClient.getInstance().player.getPos();
         });
 
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            MinecraftClient.getInstance().execute(() -> {
-                KeyBindingHelper.setGlobalAttackMode(false);
-            });
-        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> MinecraftClient.getInstance().execute(() -> KeyBindingHelper.setGlobalAttackMode(false)));
     }
 
     public static void detectPortals(World world, Vec3d playerPos) {

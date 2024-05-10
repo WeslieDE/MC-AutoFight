@@ -9,20 +9,23 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBindingHelper {
-    // Die Variable toggleVariableKeybind ist jetzt als static öffentlich verfügbar
     public static KeyBinding toggleVariableKeybind;
+    public static long keyPressTimeout = 0;
 
     public static void registerGameEvents() {
         toggleVariableKeybind = net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "Toogle Autoklicker", // Übersetzungsschlüssel für die Beschreibung
-                InputUtil.Type.KEYSYM, // Typ der Eingabe (KEYSYM für Tastatur)
-                GLFW.GLFW_KEY_F6, // Standardtaste ist F6
-                "Autoklicker" // Übersetzungsschlüssel für die Kategorie
+                "Toggle Auto klicker",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_F6,
+                "Auto klicker"
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (KeyBindingHelper.toggleVariableKeybind.wasPressed()) {
-                setGlobalAttackMode(!GlobalData.isAttacking);
+                if(keyPressTimeout + 200 < System.currentTimeMillis()){
+                    keyPressTimeout = System.currentTimeMillis();
+                    setGlobalAttackMode(!GlobalData.isAttacking);
+                }
             }
         });
     }
@@ -46,10 +49,5 @@ public class KeyBindingHelper {
 
     public static void setKeyBindingPressed(KeyBinding keyBinding, boolean pressed) {
         keyBinding.setPressed(pressed);
-    }
-
-    public static void oneTimePress(KeyBinding keyBinding) {
-        setKeyBindingPressed(keyBinding, true);
-        setKeyBindingPressed(keyBinding, false);
     }
 }
