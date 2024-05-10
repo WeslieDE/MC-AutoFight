@@ -28,16 +28,20 @@ public class KeyBindingHelper {
     }
 
     public static void setGlobalAttackMode(boolean newStatus){
-        GlobalData.isAttacking = !GlobalData.isAttacking;
+        GlobalData.isAttacking = newStatus;
 
         GlobalData.entityIgnoreList = new TimedRemovalList();
         GlobalData.currentTargetEntity = null;
-        TeleportMonitor.detectPortals(MinecraftClient.getInstance().player.getWorld(), MinecraftClient.getInstance().player.getPos());
+
+        if(newStatus){
+            if(MinecraftClient.getInstance().player == null) return;
+            TeleportMonitor.detectPortals(MinecraftClient.getInstance().player.getWorld(), MinecraftClient.getInstance().player.getPos());
+            GlobalData.killCounter = 0;
+        }
 
         KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
         setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Auto Klicker is now " + (GlobalData.isAttacking ? "enabled" : "disabled")));
-
     }
 
     public static void setKeyBindingPressed(KeyBinding keyBinding, boolean pressed) {
