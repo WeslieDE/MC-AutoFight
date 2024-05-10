@@ -79,7 +79,6 @@ public class ViewHelper {
         }
     }
 
-    //Helper Methoden
     public static float getShortestAngle(float current, float target) {
         float difference = target - current;
         if (difference < -180.0F) {
