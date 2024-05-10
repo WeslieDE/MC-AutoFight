@@ -31,10 +31,14 @@ Interested in contributing? Great! All contributions are welcome:
 - Push to the branch (`git push origin feature/AmazingFeature`).
 - Open a Pull Request.
 
-## License
-This project is unlicensed and available under [The Unlicense](https://unlicense.org/), which allows free usage, modification, and sharing.
-
 ## Contact
 Discord: https://discord.gg/4F3zAtzVJ6
 
 SpigotMC: https://www.spigotmc.org/members/bamas.199441/
+
+## License
+This project is unlicensed and available under [The Unlicense](https://unlicense.org/), which allows free usage, modification, and sharing.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=WeslieDE/MC-AutoFight&type=Date)](https://star-history.com/#WeslieDE/MC-AutoFight&Date)
