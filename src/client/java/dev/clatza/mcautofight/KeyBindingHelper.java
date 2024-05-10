@@ -2,6 +2,7 @@ package dev.clatza.mcautofight;
 
 import dev.clatza.mcautofight.Utils.TimedRemovalList;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -21,17 +22,22 @@ public class KeyBindingHelper {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (KeyBindingHelper.toggleVariableKeybind.wasPressed()) {
-                GlobalData.isAttacking = !GlobalData.isAttacking;
-
-                GlobalData.entityIgnoreList = new TimedRemovalList();
-                GlobalData.currentTargetEntety = null;
-                TeleportMonitor.detectPortals(client.player.getWorld(), client.player.getPos());
-
-                KeyBinding forwardKey = client.options.forwardKey;
-                setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
-                client.inGameHud.getChatHud().addMessage(Text.literal("Auto Klicker is now " + (GlobalData.isAttacking ? "enabled" : "disabled")));
+                setGlobalAttackMode(!GlobalData.isAttacking);
             }
         });
+    }
+
+    public static void setGlobalAttackMode(boolean newStatus){
+        GlobalData.isAttacking = !GlobalData.isAttacking;
+
+        GlobalData.entityIgnoreList = new TimedRemovalList();
+        GlobalData.currentTargetEntety = null;
+        TeleportMonitor.detectPortals(MinecraftClient.getInstance().player.getWorld(), MinecraftClient.getInstance().player.getPos());
+
+        KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
+        setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Auto Klicker is now " + (GlobalData.isAttacking ? "enabled" : "disabled")));
+
     }
 
     public static void setKeyBindingPressed(KeyBinding keyBinding, boolean pressed) {

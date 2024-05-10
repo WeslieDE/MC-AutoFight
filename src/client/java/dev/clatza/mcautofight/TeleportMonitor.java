@@ -33,12 +33,8 @@ public class TeleportMonitor {
 
             if(MinecraftClient.getInstance().player.getPos().distanceTo(lastPosition) > 20){
                 System.out.println("Teleport detected");
-                GlobalData.isAttacking = false;
-
-                KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
-                KeyBindingHelper.setKeyBindingPressed(forwardKey, false);
-                client.inGameHud.getChatHud().addMessage(Text.literal("Auto Klicker is now " + (GlobalData.isAttacking ? "enabled" : "disabled")));
-            }
+                KeyBindingHelper.setGlobalAttackMode(false);
+             }
 
             if(GlobalData.isAttacking != lastState){
                 lastState = GlobalData.isAttacking;
@@ -50,11 +46,7 @@ public class TeleportMonitor {
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             MinecraftClient.getInstance().execute(() -> {
-                GlobalData.isAttacking = false;
-
-                KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
-                KeyBindingHelper.setKeyBindingPressed(forwardKey, false);
-                System.out.println("Start moving forward; distance: verbindung getrennt");
+                KeyBindingHelper.setGlobalAttackMode(false);
             });
         });
     }
