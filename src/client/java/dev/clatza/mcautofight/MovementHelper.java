@@ -70,6 +70,22 @@ public class MovementHelper {
                 return;
             }
         });
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            PlayerEntity player = MinecraftClient.getInstance().player;
+
+            if (!GlobalData.isAttacking) return;
+            if (GlobalData.currentTargetEntity == null) return;
+            if (MinecraftClient.getInstance().player == null) return;
+
+            double distance = player.distanceTo(GlobalData.currentTargetEntity);
+
+            if(distance >= 5.0){
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, true);
+            }else{
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, false);
+            }
+        });
     }
 
     public static void attackEntity(Entity entity) {
