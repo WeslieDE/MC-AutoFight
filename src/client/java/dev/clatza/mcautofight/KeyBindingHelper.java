@@ -25,6 +25,7 @@ public class KeyBindingHelper {
 
                 GlobalData.entityIgnoreList = new TimedRemovalList();
                 GlobalData.currentTargetEntety = null;
+                TeleportMonitor.detectPortals(client.player.getWorld(), client.player.getPos());
 
                 KeyBinding forwardKey = client.options.forwardKey;
                 setKeyBindingPressed(forwardKey, GlobalData.isAttacking);

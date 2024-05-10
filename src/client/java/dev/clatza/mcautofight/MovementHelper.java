@@ -18,9 +18,7 @@ public class MovementHelper {
 
     public static void registerGameEvents(){
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-            if (!GlobalData.isAttacking) {
-                return;
-            }
+            if (!GlobalData.isAttacking) return;
 
             PlayerEntity player = MinecraftClient.getInstance().player;
             float cooldownProgress = player.getAttackCooldownProgress(0.0f);

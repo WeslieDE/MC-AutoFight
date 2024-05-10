@@ -40,7 +40,7 @@ public class ViewHelper {
         });
     }
 
-    private static boolean changeLookDirection(PlayerEntity player, Vec3d targetPos) {
+    public static boolean changeLookDirection(PlayerEntity player, Vec3d targetPos) {
         if (player == null) return false;
 
         player.getWorld().addParticle(ParticleTypes.SMOKE, targetPos.x, targetPos.y, targetPos.z, 0, 0, 0);
@@ -64,7 +64,7 @@ public class ViewHelper {
 
         Box searchBox = new Box(player.getBlockPos()).expand(60);
         List<AnimalEntity> animals = player.getWorld().getEntitiesByClass(AnimalEntity.class, searchBox,
-                animal -> Math.abs(animal.getY() - player.getY()) <= 3 && !GlobalData.entityIgnoreList.contains(animal.getId()));
+                animal -> Math.abs(animal.getY() - player.getY()) <= 3 && !GlobalData.entityIgnoreList.contains(animal.getId()) && TeleportMonitor.isInSafeZone(animal.getPos()));
 
         if (animals.isEmpty()) return null;
 
