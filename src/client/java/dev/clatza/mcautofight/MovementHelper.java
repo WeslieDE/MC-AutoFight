@@ -21,10 +21,12 @@ public class MovementHelper {
             if (!GlobalData.isAttacking) return;
 
             PlayerEntity player = MinecraftClient.getInstance().player;
-            float cooldownProgress = player.getAttackCooldownProgress(0.0f);
-            boolean isAttrackReady = cooldownProgress >= 1.0f;
+            if(player == null) return;
 
-            if (!isAttrackReady) {
+            float cooldownProgress = player.getAttackCooldownProgress(0.0f);
+            boolean isAttackReady = cooldownProgress >= 1.0f;
+
+            if (!isAttackReady) {
                 return;
             }
 
@@ -46,28 +48,16 @@ public class MovementHelper {
             if (GlobalData.currentTargetEntity == null) return;
             if (player == null) return;
 
-            //if(GlobalData.currentTargetEntety == null){
-            //KeyBinding forwardKey = client.options.forwardKey;
-            //KeyBindingHelper.setKeyBindingPressed(forwardKey, false);
-            //System.out.println("Stop moving forward; No target");
-            //return;
-            //}
-
             double distance = player.distanceTo(GlobalData.currentTargetEntity);
 
             if (distance > 1.0) {
-                KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
-                KeyBindingHelper.setKeyBindingPressed(forwardKey, true);
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, true);
 
                 if (distance > 5.0)KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, true);
-                //System.out.println("Start moving forward; distance: " + distance);
-                return;
             }else{
                 KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
                 KeyBindingHelper.setKeyBindingPressed(forwardKey, false);
                 KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, false);
-                //System.out.println("Stop moving forward: distance: " + distance);
-                return;
             }
         });
 
@@ -80,24 +70,23 @@ public class MovementHelper {
 
             double distance = player.distanceTo(GlobalData.currentTargetEntity);
 
-            if(distance >= 5.0){
-                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, true);
-            }else{
-                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, false);
-            }
+            KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, distance >= 5.0);
         });
     }
 
     public static void attackEntity(Entity entity) {
-        if(entity.isRemoved()) return;
-
         PlayerEntity player = MinecraftClient.getInstance().player;
         MinecraftClient client = MinecraftClient.getInstance();
+
+        if(player == null) return;
+        if(entity.isRemoved()) return;
 
         Vec3d eyePosition = player.getCameraPosVec(1.0F);
         double distance = eyePosition.distanceTo(entity.getPos());
 
         if (distance < MAX_REACH) {
+            if(client.interactionManager == null) return;
+
             client.interactionManager.attackEntity(player, entity);
             player.swingHand(Hand.MAIN_HAND);
             GlobalData.killCounter++;
