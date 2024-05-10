@@ -8,4 +8,6 @@ public class GlobalData {
     public static Entity currentTargetEntity = null;
     public static long lastEnemyFoundAt = 0;
     public static TimedRemovalList entityIgnoreList = new TimedRemovalList();
+
+    public static int killCounter = 0;
 }

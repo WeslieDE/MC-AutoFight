@@ -81,6 +81,7 @@ public class MovementHelper {
         if (distance < MAX_REACH) {
             client.interactionManager.attackEntity(player, entity);
             player.swingHand(Hand.MAIN_HAND);
+            GlobalData.killCounter++;
         }
     }
 }
