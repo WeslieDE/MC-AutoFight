@@ -24,6 +24,10 @@ public class ChunkCoordinates {
         return "ChunkCoordinates/" + String.format("%03d", a) + "-" + String.format("%03d", b) + ".png";
     }
 
+    public Vec3d getRealBlockCoordinates(){
+        return new Vec3d(x + a * 1000, 0, y + b * 1000);
+    }
+
     public static ChunkCoordinates getChunkCoordinates(Vec3d pos){
         int newX = (int)pos.x % 1000;
         int newY = (int)pos.y % 1000;
