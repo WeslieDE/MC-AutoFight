@@ -42,8 +42,19 @@ public class KeyBindingHelper {
             GlobalData.killCounter = 0;
         }
 
+        if(!newStatus){
+            KeyBinding sprintKey = MinecraftClient.getInstance().options.sprintKey;
+            setKeyBindingPressed(sprintKey, false);
+        }
+
+        if(!newStatus){
+            KeyBinding jumpKey = MinecraftClient.getInstance().options.jumpKey;
+            setKeyBindingPressed(jumpKey, false);
+        }
+
         KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
         setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
+
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Auto Klicker is now " + (GlobalData.isAttacking ? "enabled" : "disabled")));
     }
 
