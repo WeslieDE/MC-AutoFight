@@ -29,7 +29,7 @@ public class TeleportMonitor {
             if(lastPosition == Vec3d.ZERO)
                 lastPosition = MinecraftClient.getInstance().player.getPos();
 
-            if(MinecraftClient.getInstance().player.getPos().distanceTo(lastPosition) > 20){
+            if(MinecraftClient.getInstance().player.getPos().distanceTo(lastPosition) > 80){
                 System.out.println("Teleport detected");
                 KeyBindingHelper.setGlobalAttackMode(false);
              }
