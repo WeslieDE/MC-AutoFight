@@ -1,5 +1,7 @@
 package dev.clatza.mcautofight;
 
+import baritone.api.BaritoneAPI;
+import baritone.api.pathing.goals.GoalXZ;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
@@ -15,8 +17,26 @@ import net.minecraft.util.math.Vec3d;
 
 public class MovementHelper {
     private static final double MAX_REACH = 3.0;
+    private static String currentTarget = "";
 
     public static void registerGameEvents(){
+        BaritoneAPI.getSettings().allowSprint.value = true;
+        BaritoneAPI.getSettings().allowBreak.value = false;
+        BaritoneAPI.getSettings().allowInventory.value = false;
+        BaritoneAPI.getSettings().allowParkourPlace.value = false;
+        BaritoneAPI.getSettings().allowDiagonalDescend.value = false;
+        BaritoneAPI.getSettings().allowDiagonalAscend.value = false;
+        BaritoneAPI.getSettings().allowPlace.value = false;
+        BaritoneAPI.getSettings().enterPortal.value = false;
+        BaritoneAPI.getSettings().allowWalkOnBottomSlab.value = true;
+        BaritoneAPI.getSettings().autoTool.value = false;
+        BaritoneAPI.getSettings().freeLook.value = false;
+        BaritoneAPI.getSettings().planningTickLookahead.value = 60;
+
+        BaritoneAPI.getSettings().antiCheatCompatibility.value = true;
+
+        BaritoneAPI.getSettings().primaryTimeoutMS.value = 2000L;
+
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             if (!GlobalData.isAttacking) return;
 
@@ -41,36 +61,34 @@ public class MovementHelper {
             }
         });
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             PlayerEntity player = MinecraftClient.getInstance().player;
 
             if (!GlobalData.isAttacking) return;
             if (GlobalData.currentTargetEntity == null) return;
             if (player == null) return;
 
-            double distance = player.distanceTo(GlobalData.currentTargetEntity);
+            Entity entity = GlobalData.currentTargetEntity;
+            double distance = player.getPos().distanceTo(entity.getPos());
 
-            if (distance > 1.0) {
-                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, true);
+            if(distance > 4)
+            {
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
 
-                if (distance > 5.0)KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, true);
+                String newTarget = (int)GlobalData.currentTargetEntity.getPos().x + " " + (int)GlobalData.currentTargetEntity.getPos().z;
+                if(!newTarget.equals(currentTarget)){
+                    currentTarget = newTarget;
+                    BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new GoalXZ((int)GlobalData.currentTargetEntity.getPos().x, (int)GlobalData.currentTargetEntity.getPos().z));
+                }
             }else{
-                KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
-                KeyBindingHelper.setKeyBindingPressed(forwardKey, false);
-                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, false);
+                if(distance <= 1.5)KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
+
+                BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
+
+                if(!GlobalData.currentTargetEntity.isAlive()) return;
+                if(!GlobalData.currentTargetEntity.isAttackable()) return;
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, true);
             }
-        });
-
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            PlayerEntity player = MinecraftClient.getInstance().player;
-
-            if (!GlobalData.isAttacking) return;
-            if (GlobalData.currentTargetEntity == null) return;
-            if (MinecraftClient.getInstance().player == null) return;
-
-            double distance = player.distanceTo(GlobalData.currentTargetEntity);
-
-            KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, distance >= 5.0);
         });
     }
 

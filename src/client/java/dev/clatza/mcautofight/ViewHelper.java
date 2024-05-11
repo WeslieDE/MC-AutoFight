@@ -1,7 +1,9 @@
 package dev.clatza.mcautofight;
 
+import baritone.api.BaritoneAPI;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,19 +23,26 @@ public class ViewHelper {
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             if (!GlobalData.isAttacking) return;
 
+            PlayerEntity player = MinecraftClient.getInstance().player;
+            if(player == null) return;
+
             if (GlobalData.currentTargetEntity == null){
                 GlobalData.currentTargetEntity = findAnimal(MinecraftClient.getInstance().player, false);
 
-                if(GlobalData.currentTargetEntity != null) System.out.println("New target Enemy: " + GlobalData.currentTargetEntity.getEntityName());
+                //if(GlobalData.currentTargetEntity != null) System.out.println("New target Enemy: " + GlobalData.currentTargetEntity.getEntityName());
             }
 
             if (GlobalData.currentTargetEntity == null) return;
             if (!GlobalData.currentTargetEntity.isLiving()) {GlobalData.currentTargetEntity = null; return; }
             if (GlobalData.currentTargetEntity.isRemoved()) {GlobalData.currentTargetEntity = null; return; }
 
-            changeLookDirection(MinecraftClient.getInstance().player, GlobalData.currentTargetEntity.getPos());
+            Entity entity = GlobalData.currentTargetEntity;
+            double distance = player.getPos().distanceTo(entity.getPos());
+
+            if(distance < 6) changeLookDirection(MinecraftClient.getInstance().player, GlobalData.currentTargetEntity.getPos());
 
             if(GlobalData.lastEnemyFoundAt + 10000 < System.currentTimeMillis()){
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
                 GlobalData.entityIgnoreList.add(GlobalData.currentTargetEntity.getId());
                 GlobalData.currentTargetEntity = findAnimal(MinecraftClient.getInstance().player, true);
             }
@@ -61,9 +70,9 @@ public class ViewHelper {
     private static Entity findAnimal(PlayerEntity player, boolean random) {
         if(player == null) return null;
 
-        Box searchBox = new Box(player.getBlockPos()).expand(60);
+        Box searchBox = new Box(player.getBlockPos()).expand(40);
         List<AnimalEntity> animals = player.getWorld().getEntitiesByClass(AnimalEntity.class, searchBox,
-                animal -> Math.abs(animal.getY() - player.getY()) <= 6 && !GlobalData.entityIgnoreList.contains(animal.getId()) && TeleportMonitor.isInSafeZone(animal.getPos()));
+                animal -> !GlobalData.entityIgnoreList.contains(animal.getId()));
 
         if (animals.isEmpty()) return null;
 

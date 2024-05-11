@@ -1,5 +1,6 @@
 package dev.clatza.mcautofight;
 
+import baritone.api.BaritoneAPI;
 import dev.clatza.mcautofight.Utils.TimedRemovalList;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -42,18 +43,10 @@ public class KeyBindingHelper {
             GlobalData.killCounter = 0;
         }
 
-        if(!newStatus){
-            KeyBinding sprintKey = MinecraftClient.getInstance().options.sprintKey;
-            setKeyBindingPressed(sprintKey, false);
-        }
+        if(!newStatus) BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
 
-        if(!newStatus){
-            KeyBinding jumpKey = MinecraftClient.getInstance().options.jumpKey;
-            setKeyBindingPressed(jumpKey, false);
-        }
-
-        KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
-        setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
+        //KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
+        //setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
 
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Auto Klicker is now " + (GlobalData.isAttacking ? "enabled" : "disabled")));
     }
