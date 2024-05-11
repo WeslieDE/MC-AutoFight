@@ -45,8 +45,8 @@ public class KeyBindingHelper {
 
         if(!newStatus) BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
 
-        //KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
-        //setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
+        KeyBinding forwardKey = MinecraftClient.getInstance().options.forwardKey;
+        setKeyBindingPressed(forwardKey, GlobalData.isAttacking);
 
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Auto Klicker is now " + (GlobalData.isAttacking ? "enabled" : "disabled")));
     }
