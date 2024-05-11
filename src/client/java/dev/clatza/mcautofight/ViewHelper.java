@@ -63,7 +63,7 @@ public class ViewHelper {
 
         Box searchBox = new Box(player.getBlockPos()).expand(60);
         List<AnimalEntity> animals = player.getWorld().getEntitiesByClass(AnimalEntity.class, searchBox,
-                animal -> Math.abs(animal.getY() - player.getY()) <= 3 && !GlobalData.entityIgnoreList.contains(animal.getId()) && TeleportMonitor.isInSafeZone(animal.getPos()));
+                animal -> Math.abs(animal.getY() - player.getY()) <= 6 && !GlobalData.entityIgnoreList.contains(animal.getId()) && TeleportMonitor.isInSafeZone(animal.getPos()));
 
         if (animals.isEmpty()) return null;
 
