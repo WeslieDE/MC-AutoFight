@@ -18,6 +18,7 @@ import java.util.Random;
 
 public class ViewHelper {
     private static final float SMOOTH_FACTOR = 0.05F;
+    private static Vec3d LastKnownPosition = Vec3d.ZERO;
 
     public static void registerGameEvents(){
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
@@ -38,11 +39,12 @@ public class ViewHelper {
 
             Entity entity = GlobalData.currentTargetEntity;
             double distance = player.getPos().distanceTo(entity.getPos());
-
+            double distanceToLastPos = player.getPos().distanceTo(LastKnownPosition);
             if(distance < 6) changeLookDirection(MinecraftClient.getInstance().player, GlobalData.currentTargetEntity.getPos());
 
-            if(GlobalData.lastEnemyFoundAt + 10000 < System.currentTimeMillis()){
+            if((GlobalData.lastEnemyFoundAt + 3000 < System.currentTimeMillis() && distanceToLastPos < 2) || GlobalData.lastEnemyFoundAt + 30000 < System.currentTimeMillis()){
                 KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
+                BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
                 GlobalData.entityIgnoreList.add(GlobalData.currentTargetEntity.getId());
                 GlobalData.currentTargetEntity = findAnimal(MinecraftClient.getInstance().player, true);
             }
