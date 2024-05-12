@@ -42,7 +42,19 @@ public class ViewHelper {
             double distanceToLastPos = player.getPos().distanceTo(LastKnownPosition);
             if(distance < 6) changeLookDirection(MinecraftClient.getInstance().player, GlobalData.currentTargetEntity.getPos());
 
-            if((GlobalData.lastEnemyFoundAt + 3000 < System.currentTimeMillis() && distanceToLastPos < 2) || GlobalData.lastEnemyFoundAt + 30000 < System.currentTimeMillis()){
+            if(distance >= 6){
+                Entity nextEntity = findAnimal(MinecraftClient.getInstance().player, false);
+                double nextDistance = player.getPos().distanceTo(entity.getPos());
+
+                if(nextDistance < distance && nextDistance <= 4){
+                    GlobalData.entityIgnoreList.add(GlobalData.currentTargetEntity.getId());
+                    GlobalData.currentTargetEntity = nextEntity;
+                    if(GlobalData.DEBUG)System.out.println("Switching target to: " + GlobalData.currentTargetEntity.getEntityName());
+                    BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
+                    return;
+                }
+            }
+
             if(GlobalData.lastEnemyFoundAt + 30000 < System.currentTimeMillis()){
                 if(GlobalData.DEBUG)System.out.println("Dont move; Running failsafe");
                 KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
@@ -76,7 +88,7 @@ public class ViewHelper {
     private static Entity findAnimal(PlayerEntity player, boolean random) {
         if(player == null) return null;
 
-        Box searchBox = new Box(player.getBlockPos()).expand(40);
+        Box searchBox = new Box(player.getBlockPos()).expand(60);
         List<AnimalEntity> animals = player.getWorld().getEntitiesByClass(AnimalEntity.class, searchBox,
                 animal -> !GlobalData.entityIgnoreList.contains(animal.getId()));
 
@@ -88,10 +100,22 @@ public class ViewHelper {
             Random rand = new Random();
             return animals.get(rand.nextInt(animals.size()));
         } else {
+            //return animals.stream()
+            //        .min(Comparator.comparingDouble(a -> a.squaredDistanceTo(player)))
+            //        .orElse(null);
+
             return animals.stream()
-                    .min(Comparator.comparingDouble(a -> a.squaredDistanceTo(player)))
+                    .min(Comparator.comparingDouble(a -> calculateWeightedDistance(a, player)))
                     .orElse(null);
         }
+    }
+
+    private static double calculateWeightedDistance(Entity entity, PlayerEntity player) {
+        double yWeight = 2.0; // Gewichtung für die Y-Distanz
+        double xzWeight = 1.0; // Gewichtung für die X-Z-Distanz
+        double deltaY = Math.abs(entity.getY() - player.getY()) * yWeight;
+        double deltaXZ = Math.sqrt(Math.pow(entity.getX() - player.getX(), 2) + Math.pow(entity.getZ() - player.getZ(), 2)) * xzWeight;
+        return deltaY + deltaXZ;
     }
 
     public static float getShortestAngle(float current, float target) {
