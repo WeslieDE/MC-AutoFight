@@ -43,11 +43,15 @@ public class ViewHelper {
             if(distance < 6) changeLookDirection(MinecraftClient.getInstance().player, GlobalData.currentTargetEntity.getPos());
 
             if((GlobalData.lastEnemyFoundAt + 3000 < System.currentTimeMillis() && distanceToLastPos < 2) || GlobalData.lastEnemyFoundAt + 30000 < System.currentTimeMillis()){
+            if(GlobalData.lastEnemyFoundAt + 30000 < System.currentTimeMillis()){
+                if(GlobalData.DEBUG)System.out.println("Dont move; Running failsafe");
                 KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
                 BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
                 GlobalData.entityIgnoreList.add(GlobalData.currentTargetEntity.getId());
                 GlobalData.currentTargetEntity = findAnimal(MinecraftClient.getInstance().player, true);
             }
+
+            LastKnownPosition = GlobalData.currentTargetEntity.getPos();
         });
     }
 
