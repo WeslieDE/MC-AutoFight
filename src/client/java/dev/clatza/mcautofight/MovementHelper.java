@@ -119,18 +119,18 @@ public class MovementHelper {
         if (distanceToTarget <= 5 && distanceToEntity >= 5) {
             if(GlobalData.DEBUG)System.out.println("Target reached, but entity not reached yet");
             BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
+            KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, true);
             currentPosTarget = GlobalData.currentTargetEntity.getPos();
             currentEntityTarget = "";
             return;
         }
 
-        if (distanceToTarget >= 500 && distanceToEntity <= 25) {
-            if(GlobalData.DEBUG)System.out.println("Invalid Target, too far away");
-            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
-            currentPosTarget = GlobalData.currentTargetEntity.getPos();
-            currentEntityTarget = "";
-            return;
-        }
+        //if (distanceToTarget >= 500 && distanceToEntity <= 25) {
+           // if(GlobalData.DEBUG)System.out.println("Invalid Target, too far away");
+            //BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
+            //currentPosTarget = GlobalData.currentTargetEntity.getPos();
+            //currentEntityTarget = "";
+        //}
 
         if (distanceToTarget <= 5 && distanceToEntity <= 5) {
             currentPosTarget = Vec3d.ZERO;
