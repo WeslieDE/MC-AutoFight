@@ -3,6 +3,7 @@ package dev.clatza.mcautofight;
 import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.GoalXZ;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -17,7 +18,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class MovementHelper {
     private static final double MAX_REACH = 3.0;
-    private static String currentTarget = "";
+    private static String currentEntityTarget = "";
+    private static Vec3d currentPosTarget = Vec3d.ZERO;
 
     public static void registerGameEvents(){
         BaritoneAPI.getSettings().allowSprint.value = true;
@@ -32,8 +34,11 @@ public class MovementHelper {
         BaritoneAPI.getSettings().autoTool.value = false;
         BaritoneAPI.getSettings().freeLook.value = false;
         BaritoneAPI.getSettings().planningTickLookahead.value = 60;
-
+        BaritoneAPI.getSettings().pathRenderLineWidthPixels.value = 5.0F;
+        BaritoneAPI.getSettings().renderGoal.value = false;
         BaritoneAPI.getSettings().antiCheatCompatibility.value = true;
+        BaritoneAPI.getSettings().jumpPenalty.value = 0.0;
+        BaritoneAPI.getSettings().maxFallHeightNoWater.value = 16;
 
         BaritoneAPI.getSettings().primaryTimeoutMS.value = 2000L;
 
@@ -61,35 +66,7 @@ public class MovementHelper {
             }
         });
 
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-            PlayerEntity player = MinecraftClient.getInstance().player;
-
-            if (!GlobalData.isAttacking) return;
-            if (GlobalData.currentTargetEntity == null) return;
-            if (player == null) return;
-
-            Entity entity = GlobalData.currentTargetEntity;
-            double distance = player.getPos().distanceTo(entity.getPos());
-
-            if(distance > 4)
-            {
-                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
-
-                String newTarget = (int)GlobalData.currentTargetEntity.getPos().x + " " + (int)GlobalData.currentTargetEntity.getPos().z;
-                if(!newTarget.equals(currentTarget)){
-                    currentTarget = newTarget;
-                    BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new GoalXZ((int)GlobalData.currentTargetEntity.getPos().x, (int)GlobalData.currentTargetEntity.getPos().z));
-                }
-            }else{
-                if(distance <= 1.5)KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
-
-                BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
-
-                if(!GlobalData.currentTargetEntity.isAlive()) return;
-                if(!GlobalData.currentTargetEntity.isAttackable()) return;
-                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, true);
-            }
-        });
+        WorldRenderEvents.AFTER_ENTITIES.register(MovementHelper::afterEntities);
     }
 
     public static void attackEntity(Entity entity) {
@@ -108,6 +85,74 @@ public class MovementHelper {
             client.interactionManager.attackEntity(player, entity);
             player.swingHand(Hand.MAIN_HAND);
             GlobalData.killCounter++;
+        }
+    }
+
+    private static void afterEntities(WorldRenderContext context) {
+        PlayerEntity player = MinecraftClient.getInstance().player;
+
+        if (!GlobalData.isAttacking) return;
+        if (GlobalData.currentTargetEntity == null) return;
+        if (player == null) return;
+
+        Entity entity = GlobalData.currentTargetEntity;
+        double distanceToTarget = player.getPos().distanceTo(currentPosTarget);
+        double distanceToEntity = player.getPos().distanceTo(entity.getPos());
+
+        if(GlobalData.DEBUG)System.out.println("Distance To Entity: " + distanceToEntity);
+        if(GlobalData.DEBUG)System.out.println("Distance To Target: " + distanceToTarget);
+
+        if (distanceToTarget >= 5 && distanceToEntity >= 5) {
+            KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
+
+            if (!GlobalData.currentTargetEntity.getEntityName().equals(currentEntityTarget)) {
+                if(GlobalData.DEBUG)System.out.println("Start new Pathfinding");
+                currentPosTarget = GlobalData.currentTargetEntity.getPos();
+                currentEntityTarget = GlobalData.currentTargetEntity.getEntityName();
+                BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new GoalXZ((int) GlobalData.currentTargetEntity.getPos().x, (int) GlobalData.currentTargetEntity.getPos().z));
+                return;
+            }
+
+            return;
+        }
+
+        if (distanceToTarget <= 5 && distanceToEntity >= 5) {
+            if(GlobalData.DEBUG)System.out.println("Target reached, but entity not reached yet");
+            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
+            currentPosTarget = GlobalData.currentTargetEntity.getPos();
+            currentEntityTarget = "";
+            return;
+        }
+
+        if (distanceToTarget >= 500 && distanceToEntity <= 25) {
+            if(GlobalData.DEBUG)System.out.println("Invalid Target, too far away");
+            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
+            currentPosTarget = GlobalData.currentTargetEntity.getPos();
+            currentEntityTarget = "";
+            return;
+        }
+
+        if (distanceToTarget <= 5 && distanceToEntity <= 5) {
+            currentPosTarget = Vec3d.ZERO;
+            currentEntityTarget = "";
+
+            //KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, true);
+            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(null);
+
+            if (distanceToEntity >= 1) {
+                if (GlobalData.currentTargetEntity.getY() > player.getY() + 1.5) {
+                    if(GlobalData.DEBUG)System.out.println("Entity is above player");
+                    GlobalData.entityIgnoreList.add(GlobalData.currentTargetEntity.getId());
+                    GlobalData.currentTargetEntity = null;
+                    currentPosTarget = Vec3d.ZERO;
+                    KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
+                }else{
+                    KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, true);
+                }
+            }else{
+                if(GlobalData.DEBUG)System.out.println("Reached target entity");
+                KeyBindingHelper.setKeyBindingPressed(MinecraftClient.getInstance().options.forwardKey, false);
+            }
         }
     }
 }
