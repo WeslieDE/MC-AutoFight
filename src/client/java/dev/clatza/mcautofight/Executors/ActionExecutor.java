@@ -1,6 +1,5 @@
 package dev.clatza.mcautofight.Executors;
 
-import dev.clatza.mcautofight.Controllers.KeyBindingController;
 import dev.clatza.mcautofight.Controllers.TargetController;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -9,7 +8,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 
 public class ActionExecutor {
-    private static final int WAIT_TIME = 150;
+//    private static final int WAIT_TIME = 150;
 
     public static void doAttack() throws InterruptedException {
         attackEntity(TargetController.getTarget());

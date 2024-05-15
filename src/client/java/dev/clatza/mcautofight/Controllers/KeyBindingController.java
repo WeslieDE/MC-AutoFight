@@ -8,7 +8,7 @@ public class KeyBindingController {
         KeyBindingExecutor.registerKeyBindings();
     }
 
-    public static void setKeyBindingPressed(KeyBinding keyBinding, boolean pressed) {
-        KeyBindingExecutor.setKeyBindingPressed(keyBinding, pressed);
-    }
+//    public static void setKeyBindingPressed(KeyBinding keyBinding, boolean pressed) {
+//        KeyBindingExecutor.setKeyBindingPressed(keyBinding, pressed);
+//    }
 }
