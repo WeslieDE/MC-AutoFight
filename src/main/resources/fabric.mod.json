@@ -15,20 +15,12 @@
 	"icon": "assets/mc-autofight/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
-			"dev.clatza.mcautofight.MCAutoFight"
-		],
+		"main": [],
 		"client": [
 			"dev.clatza.mcautofight.MCAutoFightClient"
 		]
 	},
-	"mixins": [
-		"mc-autofight.mixins.json",
-		{
-			"config": "mc-autofight.client.mixins.json",
-			"environment": "client"
-		}
-	],
+	"mixins": [],
 	"depends": {
 		"fabricloader": ">=0.15.11",
 		"minecraft": "~1.20.1",
