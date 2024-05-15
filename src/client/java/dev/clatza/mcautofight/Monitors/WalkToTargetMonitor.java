@@ -48,7 +48,7 @@ public class WalkToTargetMonitor {
         if (TargetController.getTarget().isRemoved()) return;
 
         double distanceToEntity = player.getPos().distanceTo(TargetController.getTarget().getPos());
-        double distanceToTarget = player.getPos().distanceTo(PathFindingGoal);;
+        double distanceToTarget = player.getPos().distanceTo(PathFindingGoal);
 
         //We have a new target. Stop all movements and start moving to the new target
         if(!TargetController.getTarget().getEntityName().equals(currentEntityName)){

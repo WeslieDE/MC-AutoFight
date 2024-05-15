@@ -15,23 +15,23 @@ public class ActionExecutor {
         attackEntity(TargetController.getTarget());
     }
 
-    public static void doJump() throws InterruptedException {
-        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, true);
-        Thread.sleep(WAIT_TIME);
-        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, false);
-    }
-
-    public static void doSprint() throws InterruptedException {
-        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, true);
-        Thread.sleep(WAIT_TIME);
-        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, false);
-    }
-
-    public static void doScreenshot() throws InterruptedException {
-        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.screenshotKey, true);
-        Thread.sleep(WAIT_TIME);
-        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, false);
-    }
+//    public static void doJump() throws InterruptedException {
+//        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, true);
+//        Thread.sleep(WAIT_TIME);
+//        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.jumpKey, false);
+//    }
+//
+//    public static void doSprint() throws InterruptedException {
+//        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, true);
+//        Thread.sleep(WAIT_TIME);
+//        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, false);
+//    }
+//
+//    public static void doScreenshot() throws InterruptedException {
+//        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.screenshotKey, true);
+//        Thread.sleep(WAIT_TIME);
+//        KeyBindingController.setKeyBindingPressed(MinecraftClient.getInstance().options.sprintKey, false);
+//    }
 
     private static final double MAX_REACH = 3.0;
     private static void attackEntity(Entity entity) {

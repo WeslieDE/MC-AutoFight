@@ -85,6 +85,7 @@ public class StateExecutor {
     private static void doMainLogic() throws InterruptedException {
         targetMonitor.tick();
         teleportMonitor.tick();
+        disconnectMonitor.tick();
         portalMonitor.tick();
         walkToTargetMonitor.tick();
         lookAtTargetMonitor.tick();
