@@ -49,13 +49,13 @@ public class MovementController {
         return currentMovementType;
     }
 
-    public static void setStartPosition(Vec3d pos){
-        //TODO: Implement saveStartPosition
-    }
-
-    public static void returnToStartPosition(){
-        //TODO: Implement returnToStartPosition
-    }
+//    public static void setStartPosition(Vec3d pos){
+//        //TODO: Implement saveStartPosition
+//    }
+//
+//    public static void returnToStartPosition(){
+//        //TODO: Implement returnToStartPosition
+//    }
 
     public static void moveToDirection(Vec3d cord) {
         //if(GlobalData.DEBUG)System.out.println("[DEBUG][MovementController] moveToDirection: " + cord.toString());

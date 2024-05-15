@@ -10,9 +10,9 @@ public class StateExecutor {
     private static boolean currentState = false;
     private static Thread mainThread = null;
 
-    public static boolean getState() {
-        return currentState;
-    }
+//    public static boolean getState() {
+//        return currentState;
+//    }
 
     public static void setAutoFight(boolean newState) {
         if (currentState == newState) {
@@ -30,7 +30,6 @@ public class StateExecutor {
                 while (true) {
                     try {
                         doMainLogic();
-                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         if (GlobalData.DEBUG) System.out.println("[DEBUG][StateExecutor] Main thread interrupted.");
                         stopAllActions();
@@ -83,13 +82,14 @@ public class StateExecutor {
         disconnectMonitor = new DisconnectMonitor();
     }
 
-    private static void doMainLogic() {
+    private static void doMainLogic() throws InterruptedException {
         targetMonitor.tick();
         teleportMonitor.tick();
         portalMonitor.tick();
         walkToTargetMonitor.tick();
         lookAtTargetMonitor.tick();
         attackTargetMonitor.tick();
+        Thread.sleep(100);
     }
 
     private static void stopAllActions() {

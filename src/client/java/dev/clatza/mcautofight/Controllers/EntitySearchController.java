@@ -16,14 +16,14 @@ public class EntitySearchController {
         return EntitySearchExecutor.findEntity(player, false);
     }
 
-    public static Entity getRandomEntity() {
-        if (GlobalData.DEBUG) System.out.println("[DEBUG][EntitySearchController] Get new random entity.");
-
-        PlayerEntity player = MinecraftClient.getInstance().player;
-        if (player == null) return null;
-
-        return EntitySearchExecutor.findEntity(player, true);
-    }
+//    public static Entity getRandomEntity() {
+//        if (GlobalData.DEBUG) System.out.println("[DEBUG][EntitySearchController] Get new random entity.");
+//
+//        PlayerEntity player = MinecraftClient.getInstance().player;
+//        if (player == null) return null;
+//
+//        return EntitySearchExecutor.findEntity(player, true);
+//    }
 
     public static void addToIgnoreList(Entity entity) {
         if (GlobalData.DEBUG)
@@ -32,10 +32,10 @@ public class EntitySearchController {
         EntitySearchExecutor.addToIgnoreList(entity);
     }
 
-    public static void clearIgnoreList(Entity entity) {
-        if (GlobalData.DEBUG)
-            System.out.println("[DEBUG][EntitySearchController] addToIgnoreList: " + entity.toString());
-
-        EntitySearchExecutor.clearIgnoreList(entity);
-    }
+//    public static void clearIgnoreList(Entity entity) {
+//        if (GlobalData.DEBUG)
+//            System.out.println("[DEBUG][EntitySearchController] addToIgnoreList: " + entity.toString());
+//
+//        EntitySearchExecutor.clearIgnoreList(entity);
+//    }
 }

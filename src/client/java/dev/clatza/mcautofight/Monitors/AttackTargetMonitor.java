@@ -37,7 +37,7 @@ public class AttackTargetMonitor {
 
     private static void attackEntity(Entity entity) {
         PlayerEntity player = MinecraftClient.getInstance().player;
-        MinecraftClient client = MinecraftClient.getInstance();
+//        MinecraftClient client = MinecraftClient.getInstance();
 
         if (player == null) return;
         if (entity.isRemoved()) return;

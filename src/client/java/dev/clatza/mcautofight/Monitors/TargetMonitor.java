@@ -1,6 +1,5 @@
 package dev.clatza.mcautofight.Monitors;
 
-import baritone.api.BaritoneAPI;
 import dev.clatza.mcautofight.Controllers.EntitySearchController;
 import dev.clatza.mcautofight.Controllers.TargetController;
 import dev.clatza.mcautofight.GlobalData;
@@ -9,7 +8,7 @@ import net.minecraft.entity.Entity;
 public class TargetMonitor {
     public void tick() {
         if(TargetController.getTarget() == null) {setNewTarget("Null"); return;}
-        if(TargetController.getTarget().isRemoved()) {setNewTarget("isRemoved"); return;}
+        if(TargetController.getTarget().isRemoved()) {setNewTarget("isRemoved"); }
     }
 
     private void setNewTarget(String reason){

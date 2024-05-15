@@ -36,9 +36,9 @@ public class EntitySearchExecutor {
         entityIgnoreList.add(entity.getId());
     }
 
-    public static void clearIgnoreList(Entity entity) {
-        entityIgnoreList.clear();
-    }
+//    public static void clearIgnoreList(Entity entity) {
+//        entityIgnoreList.clear();
+//    }
 
     private static double calculateWeightedDistance(net.minecraft.entity.Entity entity, PlayerEntity player) {
         double yWeight = 2.0; // Gewichtung für die Y-Distanz

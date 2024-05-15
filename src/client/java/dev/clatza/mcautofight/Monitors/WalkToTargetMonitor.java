@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 public class WalkToTargetMonitor {
     private String currentEntityName = "";
     private Vec3d PathFindingGoal = Vec3d.ZERO;
-    private float lastMovingStartAt = 0;
+    private float lastMovingStartAt;
 
     public WalkToTargetMonitor() {
         BaritoneAPI.getSettings().allowSprint.value = true;
