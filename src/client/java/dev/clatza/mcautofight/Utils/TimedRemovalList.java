@@ -26,4 +26,8 @@ public class TimedRemovalList {
     public boolean contains(Integer value) {
         return map.containsKey(value);
     }
+
+    public void clear(){
+        map.clear();
+    }
 }
